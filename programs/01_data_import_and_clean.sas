@@ -5,7 +5,7 @@ libname mylib '/home/你的用户名/FAERS_AE_Project/output';
 ods rtf file='/home/你的用户名/FAERS_AE_Project/output/FAERS_Report.rtf'
 	style= journal;		
 							
-title "FAERS Adverse Event Reporting Analysis";
+title1 "FAERS Adverse Event Reporting Analysis";
 footnote "Data soure: FDA FAERS quarterly data";
 
 /*3.导入DEMO数据*/
@@ -16,12 +16,7 @@ proc import datafile='/home/你的用户名/FAERS_AE_Project/data/DEMO25Q1.txt'
 	guessingrows =10000;	
 run;
 
-/*4.查看导入是否正确*/
-proc contents data=DEMO_raw; run; 	
-proc print data=DEMO_raw(obs=10); run;	
-
-/*5.去重:每个CASEID 保留最新版本
-（通过fda_dt（fda接受日期）和Primaryid（每次报告版本号）进行去重）*/
+/*4.去重:每个CASEID 保留最新版本*/
 proc sort data=DEMO_raw; 
 	by CASEID descending fda_dt descending Primaryid; 
 run; 
@@ -31,7 +26,7 @@ data DEMO_dedup;
 	if first.CASEID;	*保留每个病例的最新报告;
 run;
 
-/*6派生分析变量：年龄组、报告年份、性别标准化*/
+/*5派生分析变量：年龄组、报告年份、性别标准化*/
 data DEMO_analysis;
 	set demo_dedup;
 	
@@ -55,7 +50,7 @@ data DEMO_analysis;
     else AGE_GRP = "Missing";
     
     /* 性别 */
-    if upcase(SEX) = "M" then SEX_STD = "Male"; *upcase()统一大写判断;
+    if upcase(SEX) = "M" then SEX_STD = "Male"; 
     else if upcase(SEX) = "F" then SEX_STD = "Female";
     else SEX_STD = "Unknown";
     
@@ -65,7 +60,7 @@ data DEMO_analysis;
 run;
 
 
-/* 7. 导入DRUG数据 */
+/* 6. 导入DRUG数据 */
 proc import datafile='/home/你的用户名/FAERS_AE_Project/data/DRUG25Q1.txt'
     out=DRUG_raw dbms=dlm replace;
     delimiter='$'; 
@@ -73,14 +68,14 @@ proc import datafile='/home/你的用户名/FAERS_AE_Project/data/DRUG25Q1.txt'
     guessingrows=10000;
 run;
 
-/* 8. 筛选首要怀疑药物（PS） */
+/* 7. 筛选首要怀疑药物（PS） */
 data DRUG_ps;
     set DRUG_raw;
     where upcase(ROLE_COD) = "PS";
 run;
 
 
-/* 9. 导入REAC数据 */
+/* 8. 导入REAC数据 */
 proc import datafile='/home/你的用户名/FAERS_AE_Project/data/REAC25Q1.txt'
     out=REAC_raw dbms=dlm replace;
     delimiter='$'; 
@@ -89,6 +84,6 @@ proc import datafile='/home/你的用户名/FAERS_AE_Project/data/REAC25Q1.txt'
 run;
 
 
-/* 去除完全重复的AE记录（一个病例同一个PT只保留一次） */
+/* 9.去除完全重复的AE记录（一个病例同一个PT只保留一次） */
 proc sort data=REAC_raw nodupkey; by PRIMARYID PT; run; 
-*PT 首选术语，即不良事件术语、nodupkey表示按by变量删除重复;
+
