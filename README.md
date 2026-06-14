@@ -2,6 +2,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
 ## 项目简介
 
 本项目基于 FDA 不良反应报告系统（FAERS）2025 年第一季度的公开数据，使用 SAS 进行数据清洗、合并和描述性统计分析，旨在展示统计编程师在真实世界数据处理中的核心技能，包括数据去重、派生变量创建、多表连接、生成统计报表及可交付成果（RTF 报告）。
