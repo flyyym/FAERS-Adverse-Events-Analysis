@@ -3,22 +3,22 @@ libname mylib '/home/你的用户名/FAERS_AE_Project/output';
 
 /* 2.设置输出格式（最终生成RTF报告）*/
 ods rtf file='/home/你的用户名/FAERS_AE_Project/output/FAERS_Report.rtf'
-	style= journal;		*ods=output delivery system 输出交付系统；
-							rtf为富文本格式，可直接用word打开；journal为期刊;
+	style= journal;		
+							
 title "FAERS Adverse Event Reporting Analysis";
 footnote "Data soure: FDA FAERS quarterly data";
 
 /*3.导入DEMO数据*/
 proc import datafile='/home/你的用户名/FAERS_AE_Project/data/DEMO25Q1.txt'
-	out=DEMO_raw dbms=dlm replace;   *dlm表示分隔符文件;
-	delimiter= "$";		*因为FAERS的ASCII文件使用$作为字段分隔符;
-	getnames=yes;		*第一行作为变量名;
-	guessingrows =10000;	*SAS扫描前10000行来决定每个变量的类型和长度;
+	out=DEMO_raw dbms=dlm replace;  
+	delimiter= "$";		
+	getnames=yes;		
+	guessingrows =10000;	
 run;
 
 /*4.查看导入是否正确*/
-proc contents data=DEMO_raw; run; 	*查看数据集结构（变量名、类型、长度、标签）;
-proc print data=DEMO_raw(obs=10); run;	*查看前10行数据，确认数据质量;
+proc contents data=DEMO_raw; run; 	
+proc print data=DEMO_raw(obs=10); run;	
 
 /*5.去重:每个CASEID 保留最新版本
 （通过fda_dt（fda接受日期）和Primaryid（每次报告版本号）进行去重）*/
