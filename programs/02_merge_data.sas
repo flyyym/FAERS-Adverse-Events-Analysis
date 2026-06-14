@@ -10,7 +10,7 @@ proc sql;
 quit;
 
 /* 11. 再合并人口学信息 */
-proc sql;	/* 别名说明: a = DRUG_AE, b = DEMO_analysis */
+proc sql;	
     create table FINAL_ANALYSIS as
     select 
         a.*,
@@ -21,8 +21,6 @@ proc sql;	/* 别名说明: a = DRUG_AE, b = DEMO_analysis */
     from DRUG_AE a
     left join DEMO_analysis b on a.PRIMARYID = b.PRIMARYID;
 quit;
-*DRUG_AE a是取别名的意思，其中as可以被省略;
-
 
 /* 保存最终分析数据集到output库 */
 data mylib.FINAL_ANALYSIS;
